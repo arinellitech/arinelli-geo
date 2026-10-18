@@ -23,24 +23,30 @@ export function planCells(panel: Panel, onlyProviders?: Provider[]): Cell[] {
   return cells;
 }
 
+/** Células planejadas e as que ainda faltam no run (todas, se o run ainda não existe). Só lê. */
+export async function pendingCells(
+  sql: Sql,
+  runId: string | null,
+  panel: Panel,
+  onlyProviders?: Provider[],
+): Promise<{ all: Cell[]; todo: Cell[] }> {
+  const all = planCells(panel, onlyProviders);
+  const done = runId ? await existingCells(sql, runId) : new Set<string>();
+  return { all, todo: all.filter((c) => !done.has(`${c.prompt.id}|${c.provider}|${c.mode}`)) };
+}
+
 export type MonitorStats = { planned: number; skipped: number; ok: number; failed: number };
 
 export async function runMonitor(
   sql: Sql,
   runId: string,
   panel: Panel,
-  opts: { onlyProviders?: Provider[]; dryRun?: boolean; log?: (msg: string) => void } = {},
+  opts: { onlyProviders?: Provider[]; log?: (msg: string) => void } = {},
 ): Promise<MonitorStats> {
   const log = opts.log ?? console.log;
-  const all = planCells(panel, opts.onlyProviders);
-  const done = await existingCells(sql, runId);
-  const todo = all.filter((c) => !done.has(`${c.prompt.id}|${c.provider}|${c.mode}`));
+  const { all, todo } = await pendingCells(sql, runId, panel, opts.onlyProviders);
   const stats: MonitorStats = { planned: all.length, skipped: all.length - todo.length, ok: 0, failed: 0 };
   log(`células: ${all.length} planejadas, ${stats.skipped} já feitas, ${todo.length} a executar`);
-  if (opts.dryRun) {
-    for (const c of todo) log(`  [dry-run] ${c.provider}/${c.mode} ${c.prompt.id}`);
-    return stats;
-  }
 
   const limit = pLimit(panel.concurrency);
   await Promise.all(

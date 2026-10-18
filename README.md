@@ -34,8 +34,11 @@ chamadas pagas.
 
 ### 1. Banco (Supabase)
 
-Aplique `supabase/migrations/20261018000000_init.sql` no projeto (SQL editor ou `supabase db push`).
-Pegue a connection string do **Transaction pooler** (porta 6543) para `DATABASE_URL`.
+Aplique as migrations de `supabase/migrations/` em ordem (SQL editor ou `supabase db push`). A segunda cria o
+role `geo_worker`, que só enxerga o schema `geo`; defina a senha dele fora do repo
+(`alter role geo_worker with login password '...'`). O banco pode ser compartilhado com outro app, então o
+`DATABASE_URL` usa esse role, nunca o `postgres`: Transaction pooler (porta 6543) com usuário
+`geo_worker.<project_ref>`.
 
 ### 2. Fatos e prompts
 

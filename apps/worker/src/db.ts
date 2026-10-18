@@ -52,6 +52,11 @@ export async function getOrCreateRun(sql: Sql, runKey: string, panelVersion: str
   return run;
 }
 
+export async function findRun(sql: Sql, runKey: string): Promise<Run | null> {
+  const [run] = await sql<Run[]>`select id, run_key, status from geo.runs where run_key = ${runKey}`;
+  return run ?? null;
+}
+
 export async function finishRun(sql: Sql, runId: string, status: 'done' | 'failed', error?: string): Promise<void> {
   await sql`update geo.runs set status = ${status}, finished_at = now(), error = ${error ?? null} where id = ${runId}`;
 }
