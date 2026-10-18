@@ -56,6 +56,10 @@ jobs:
 
       - name: Ambiente
         run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "::error::Secret VERCEL_TOKEN não definido (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
           if [ "$GITHUB_REF" = "refs/heads/main" ] && [ "$GITHUB_EVENT_NAME" != "pull_request" ]; then
             echo "TARGET=production" >> "$GITHUB_ENV"
             echo "PROD_FLAG=--prod" >> "$GITHUB_ENV"
