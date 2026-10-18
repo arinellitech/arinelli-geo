@@ -64,23 +64,49 @@ const factsSchema = z.object({
     headline: z.string(),
     headline_en: z.string().optional(),
     location: z.object({ city: z.string(), region: z.string().optional(), country: z.string() }),
-    languages: z.array(z.object({ name: z.string(), level: z.string() })).default([]),
+    languages: z
+      .array(
+        z.object({
+          name: z.string(),
+          name_en: z.string().optional(),
+          level: z.string(),
+          level_en: z.string().optional(),
+        }),
+      )
+      .default([]),
     since: z.string().optional(),
   }),
   site: z.object({ url: z.string(), own_domains: z.array(z.string()).default([]) }),
   profiles: z.record(z.string(), z.string()).default({}),
-  expertise: z.object({ domains: z.array(z.string()), stack: z.array(z.string()) }),
+  expertise: z.object({
+    domains: z.array(z.string()),
+    domains_en: z.array(z.string()).optional(),
+    stack: z.array(z.string()),
+  }),
   experience: z.array(
     z.object({
       org: z.string(),
       role: z.string(),
+      role_en: z.string().optional(),
       period: z.string(),
+      period_en: z.string().optional(),
       summary: z.string(),
+      summary_en: z.string().optional(),
       scale: z.string().optional(),
+      scale_en: z.string().optional(),
     }),
   ),
-  projects: z.array(z.object({ name: z.string(), url: z.string().optional(), summary: z.string() })),
-  education: z.array(z.object({ institution: z.string(), degree: z.string(), period: z.string().optional() })),
+  projects: z.array(
+    z.object({ name: z.string(), url: z.string().optional(), summary: z.string(), summary_en: z.string().optional() }),
+  ),
+  education: z.array(
+    z.object({
+      institution: z.string(),
+      degree: z.string(),
+      degree_en: z.string().optional(),
+      period: z.string().optional(),
+    }),
+  ),
   corrections: z.array(z.object({ claim: z.string(), truth: z.string() })).default([]),
 });
 

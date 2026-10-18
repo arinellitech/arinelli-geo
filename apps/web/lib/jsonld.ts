@@ -1,12 +1,12 @@
 import { currentRole, siteUrl, type Facts } from './facts';
-
-const COUNTRY_NAMES: Record<string, string> = { BR: 'Brasil' };
+import { countryName, HOME, type Locale } from './i18n';
 
 /**
  * JSON-LD schema.org/Person — a "ficha" que crawlers e modelos leem.
  * Tudo vem do facts.yaml para o site, o llms.txt e o juiz contarem a mesma história.
+ * `f` já chega localizado; o @id da pessoa é o mesmo nas duas versões.
  */
-export function personJsonLd(f: Facts) {
+export function personJsonLd(f: Facts, locale: Locale) {
   const url = siteUrl();
   const role = currentRole(f);
   return {
@@ -27,7 +27,7 @@ export function personJsonLd(f: Facts) {
     },
     homeLocation: {
       '@type': 'Place',
-      name: `${f.person.location.city}, ${COUNTRY_NAMES[f.person.location.country] ?? f.person.location.country}`,
+      name: `${f.person.location.city}, ${countryName(f.person.location.country, locale)}`,
     },
     sameAs: Object.values(f.profiles).filter((u) => !u.includes('TODO')),
     knowsAbout: [...f.expertise.domains, ...f.expertise.stack],
@@ -39,7 +39,7 @@ export function personJsonLd(f: Facts) {
       occupationLocation: { '@type': 'City', name: f.person.location.city },
       skills: f.expertise.stack.join(', '),
     },
-    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${url}${HOME[locale] === '/' ? '' : HOME[locale]}`, inLanguage: locale },
   };
 }
 

@@ -40,7 +40,8 @@ Pegue a connection string do **Transaction pooler** (porta 6543) para `DATABASE_
 ### 2. Fatos e prompts
 
 - Preencha os `TODO` em `facts.yaml` (domínio do site, GitHub, LinkedIn, URLs dos repos). Revise cada linha:
-  é exatamente isso que o site vai publicar e que o juiz vai usar como verdade.
+  é exatamente isso que o site vai publicar e que o juiz vai usar como verdade. Cada texto tem um irmão
+  `_en` (`headline_en`, `summary_en`…) que alimenta a versão em inglês em `/en`.
 - Ajuste `prompts/panel.yaml`. Confira os ids de modelo em <https://vercel.com/ai-gateway/models> — eles mudam.
   Mantenha os ids dos prompts estáveis (são a chave do histórico).
 
@@ -79,6 +80,7 @@ O `next.config.ts` já inclui `../../facts.yaml` no trace do build. Depois do de
 
 - `/` com `<script type="application/ld+json">` de `Person` (valide em <https://validator.schema.org>)
 - `/llms.txt`, `/robots.txt`, `/sitemap.xml`
+- `/en` e `/en/llms.txt` em inglês, com `hreflang` apontando uma versão para a outra
 - `/dashboard` pedindo Basic auth
 
 ## O que mexe o ponteiro

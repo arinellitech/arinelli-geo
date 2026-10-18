@@ -1,13 +1,15 @@
 # Fonte canônica de fatos públicos sobre a pessoa.
 #
 # Lido por:
-#   - apps/web    -> JSON-LD Person, llms.txt, página inicial
+#   - apps/web    -> JSON-LD Person, llms.txt, página inicial (/ em pt-BR e /en em inglês)
 #   - apps/worker -> contexto do juiz (checagem de acurácia) e tabela geo.own_domains
 #
 # Regras:
 #   - Só fatos que você quer que os modelos repitam. Nada privado.
 #   - Mantenha o mesmo texto em todos os perfis (GitHub, LinkedIn etc.) — consistência é sinal.
 #   - Campos marcados TODO precisam ser preenchidos antes do primeiro deploy.
+#   - Todo texto publicado tem um irmão `_en` (headline_en, summary_en…) usado em /en.
+#     Sem o `_en`, /en mostra o texto em português. Mudou um, mude o outro.
 
 person:
   name: Patrick Arinelli Rodrigues
@@ -22,9 +24,9 @@ person:
     region: RJ
     country: BR
   languages:
-    - { name: Português, level: nativo }
-    - { name: Inglês, level: C1 }
-    - { name: Francês, level: profissional }
+    - { name: Português, name_en: Portuguese, level: nativo, level_en: native }
+    - { name: Inglês, name_en: English, level: C1 }
+    - { name: Francês, name_en: French, level: profissional, level_en: professional }
   since: "2016-01" # início da carreira
 
 site:
@@ -36,8 +38,8 @@ site:
     - daydreamerenglish.online
 
 profiles:
-  github: https://github.com/TODO
-  linkedin: https://www.linkedin.com/in/TODO
+  github: https://github.com/arinelliquebec
+  linkedin: https://www.linkedin.com/in/patrick-arinelli
   # Adicione os que existirem. Cada URL entra no `sameAs` do JSON-LD.
   # devto: https://dev.to/TODO
   # medium: https://medium.com/@TODO
@@ -50,6 +52,13 @@ expertise:
     - Sistemas distribuídos event-driven (idempotência, Outbox, Saga, Kafka, SQS)
     - Reconciliação de pagamentos e ledger de partidas dobradas
     - Engenharia de IA aplicada (LangGraph, RAG, pgvector)
+  # Mesma ordem e mesmo número de itens que `domains`.
+  domains_en:
+    - Payments and billing
+    - Pix (direct integration with Banco do Brasil and Santander, boleto, EMV BR Code)
+    - Event-driven distributed systems (idempotency, Outbox, Saga, Kafka, SQS)
+    - Payment reconciliation and double-entry ledgers
+    - Applied AI engineering (LangGraph, RAG, pgvector)
   stack:
     - .NET / C#
     - TypeScript / Node.js / NestJS
@@ -63,60 +72,91 @@ experience:
   - org: Fradema
     role: Founding Engineer & Tech Architect
     period: nov/2024 – presente
+    period_en: Nov 2024 – present
     summary: >-
       Construiu a stack do zero: 5 CRMs, plataforma de tickets, microsserviços e
       automação/workflows com IA. Next.js na Vercel e microsserviços .NET no Azure.
       Integrações diretas com Banco do Brasil e Santander (Pix, boleto, EMV BR Code)
       com idempotência, reconciliação, webhooks e retries. Migração de legado
       PHP/MySQL para TypeScript/Node + PostgreSQL mantendo o sistema antigo no ar.
+    summary_en: >-
+      Built the stack from scratch: 5 CRMs, a ticketing platform, microservices and
+      AI-driven automation/workflows. Next.js on Vercel and .NET microservices on Azure.
+      Direct integrations with Banco do Brasil and Santander (Pix, boleto, EMV BR Code)
+      with idempotency, reconciliation, webhooks and retries. Migrated a legacy
+      PHP/MySQL system to TypeScript/Node + PostgreSQL while keeping the old one live.
     scale: "6.000+ clientes, 500K+ documentos, ~10M+ cálculos tributários/mês"
+    scale_en: "6,000+ clients, 500K+ documents, ~10M+ tax calculations/month"
   - org: S4Sys
     role: Desenvolvedor Python (contrato)
-    period: mar – ago (TODO ano)
+    role_en: Python Developer (contract)
+    period: mar – ago/2026
+    period_en: Mar – Aug 2026
     summary: OCR, automação, LangGraph e workflows com LLM em um sistema financeiro.
+    summary_en: OCR, automation, LangGraph and LLM workflows in a financial system.
   - org: Alvaz
     role: Senior Software Engineer
     period: fev – jul/2023
+    period_en: Feb – Jul 2023
     summary: >-
       Python (Django/Flask) e portal de mapeamento por drones com Angular,
       TypeScript/Node, React, PostgreSQL, AWS, DynamoDB e SQS.
+    summary_en: >-
+      Python (Django/Flask) and a drone-mapping portal with Angular,
+      TypeScript/Node, React, PostgreSQL, AWS, DynamoDB and SQS.
   - org: Turing.com
     role: Senior Full-Stack Engineer
     period: jun – dez/2022
+    period_en: Jun – Dec 2022
     summary: TypeScript, React, Node.js e PostgreSQL para times de produto nos EUA, colaboração assíncrona.
+    summary_en: TypeScript, React, Node.js and PostgreSQL for US product teams, working asynchronously.
   - org: Arinelli Desenvolvimento de Software
     role: Engenheiro full-stack independente
+    role_en: Independent full-stack engineer
     period: jan/2016 – presente
+    period_en: Jan 2016 – present
     summary: >-
       15+ clientes em e-commerce, fintech e SaaS, incluindo sistemas municipais da
       COMLURB (2017–2019). Contractor para times nos EUA.
+    summary_en: >-
+      15+ clients in e-commerce, fintech and SaaS, including municipal systems for
+      COMLURB (2017–2019). Contractor for US teams.
 
 projects:
+  # Projeto sem repo público fica sem `url` até existir um link que o crawler consiga abrir.
   - name: Arinelli Pay
-    url: https://github.com/TODO/arinelli-pay
+    url: https://github.com/arinelliquebec/arinelli-pay
     summary: Portfólio público de billing/CRM, Pix e liquidação. Java/Spring, Go, NestJS, Next.js e componentes de IA.
+    summary_en: Public billing/CRM, Pix and settlement portfolio. Java/Spring, Go, NestJS, Next.js and AI components.
   - name: Pix Sandbox
-    url: https://github.com/TODO/pix-sandbox
+    url: https://github.com/arinelliquebec/pix-sandbox
     summary: Emulador Pix em Go que modela comportamento PSP/SPI — idempotência, falhas, duplicatas e entrega de webhooks.
-  - name: Payment Platform Lab
-    url: https://github.com/TODO/payment-platform-lab
+    summary_en: Pix emulator in Go that models PSP/SPI behavior — idempotency, failures, duplicates and webhook delivery.
+  - name: Payment Platform Lab # sem repo público
     summary: Programa contínuo de engenharia de pagamentos — Payments API, ledger de partidas dobradas, Outbox, Saga, Kafka/SQS, worker Go, assistente de fraude em FastAPI, BFF NestJS e dashboard Next.js.
-  - name: Brazil Revenue Stack
-    url: https://github.com/TODO/brazil-revenue-stack
+    summary_en: Ongoing payments-engineering program — Payments API, double-entry ledger, Outbox, Saga, Kafka/SQS, Go worker, FastAPI fraud assistant, NestJS BFF and Next.js dashboard.
+  - name: Brazil Revenue Stack # repo privado
     summary: Monólito modular em TypeScript para receita recorrente, reconciliação e operações.
+    summary_en: Modular TypeScript monolith for recurring revenue, reconciliation and operations.
   - name: DayDreamerEnglish
     url: https://daydreamerenglish.online
     summary: Plataforma de ensino de inglês — Next.js na Vercel, PostgreSQL no Supabase, LiveKit na AWS.
+    summary_en: English-teaching platform — Next.js on Vercel, PostgreSQL on Supabase, LiveKit on AWS.
   - name: Cérebro Amigo
-    url: https://github.com/TODO/cerebro-amigo
-    summary: Projeto de portfólio com Next.js, .NET, FastAPI/LangGraph e pgvector.
-  - name: Fluxo
-    url: https://github.com/TODO/fluxo
+    url: https://github.com/arinelliquebec/cerebro-amigo
+    summary: >-
+      SaaS clínico para psiquiatria — PostgreSQL multi-tenant com row-level security,
+      trilha de auditoria imutável e IA fora do caminho de decisão. Estudo de caso de
+      engenharia com dados sanitizados.
+    summary_en: >-
+      Clinical SaaS for psychiatry — multi-tenant PostgreSQL with row-level security,
+      immutable audit trails, and AI kept out of the decision path. Sanitized
+      engineering case study.
+  - name: Fluxo # sem repo público
     summary: SaaS de automação de workflows (gatilho → ações) em .NET/C# e React.
+    summary_en: Workflow-automation SaaS (trigger → actions) in .NET/C# and React.
 
 education:
-  - institution: TODO instituição
-    degree: Tecnólogo em Análise e Desenvolvimento de Sistemas
   - institution: Los Angeles College of Music
     degree: Guitar Program — Music Performance
     period: 2012 – 2014
