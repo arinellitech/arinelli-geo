@@ -28,10 +28,11 @@ person:
   since: "2016-01" # início da carreira
 
 site:
-  url: https://TODO-seu-dominio.dev
+  # Troque pelo domínio próprio quando tiver um (e adicione-o em own_domains).
+  url: https://arinelli-geo.vercel.app
   # Domínios que você controla. Citações nesses domínios contam como "próprias" no dashboard.
   own_domains:
-    - TODO-seu-dominio.dev
+    - arinelli-geo.vercel.app
     - daydreamerenglish.online
 
 profiles:
