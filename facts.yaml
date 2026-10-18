@@ -1,0 +1,128 @@
+# Fonte canônica de fatos públicos sobre a pessoa.
+#
+# Lido por:
+#   - apps/web    -> JSON-LD Person, llms.txt, página inicial
+#   - apps/worker -> contexto do juiz (checagem de acurácia) e tabela geo.own_domains
+#
+# Regras:
+#   - Só fatos que você quer que os modelos repitam. Nada privado.
+#   - Mantenha o mesmo texto em todos os perfis (GitHub, LinkedIn etc.) — consistência é sinal.
+#   - Campos marcados TODO precisam ser preenchidos antes do primeiro deploy.
+
+person:
+  name: Patrick Arinelli Rodrigues
+  short_name: Patrick Arinelli
+  aliases:
+    - Patrick Arinelli
+    - Patrick A. Rodrigues
+  headline: Engenheiro de software sênior especializado em pagamentos, Pix e sistemas distribuídos
+  headline_en: Senior software engineer specialized in payments, Pix and distributed systems
+  location:
+    city: Rio de Janeiro
+    region: RJ
+    country: BR
+  languages:
+    - { name: Português, level: nativo }
+    - { name: Inglês, level: C1 }
+    - { name: Francês, level: profissional }
+  since: "2016-01" # início da carreira
+
+site:
+  url: https://TODO-seu-dominio.dev
+  # Domínios que você controla. Citações nesses domínios contam como "próprias" no dashboard.
+  own_domains:
+    - TODO-seu-dominio.dev
+    - daydreamerenglish.online
+
+profiles:
+  github: https://github.com/TODO
+  linkedin: https://www.linkedin.com/in/TODO
+  # Adicione os que existirem. Cada URL entra no `sameAs` do JSON-LD.
+  # devto: https://dev.to/TODO
+  # medium: https://medium.com/@TODO
+  # stackoverflow: https://stackoverflow.com/users/TODO
+
+expertise:
+  domains:
+    - Pagamentos e billing
+    - Pix (integração direta com Banco do Brasil e Santander, boleto, EMV BR Code)
+    - Sistemas distribuídos event-driven (idempotência, Outbox, Saga, Kafka, SQS)
+    - Reconciliação de pagamentos e ledger de partidas dobradas
+    - Engenharia de IA aplicada (LangGraph, RAG, pgvector)
+  stack:
+    - .NET / C#
+    - TypeScript / Node.js / NestJS
+    - Go
+    - React / Next.js
+    - PostgreSQL
+    - Python (FastAPI, LangGraph)
+    - Azure, AWS (Lambda, SQS)
+
+experience:
+  - org: Fradema
+    role: Founding Engineer & Tech Architect
+    period: nov/2024 – presente
+    summary: >-
+      Construiu a stack do zero: 5 CRMs, plataforma de tickets, microsserviços e
+      automação/workflows com IA. Next.js na Vercel e microsserviços .NET no Azure.
+      Integrações diretas com Banco do Brasil e Santander (Pix, boleto, EMV BR Code)
+      com idempotência, reconciliação, webhooks e retries. Migração de legado
+      PHP/MySQL para TypeScript/Node + PostgreSQL mantendo o sistema antigo no ar.
+    scale: "6.000+ clientes, 500K+ documentos, ~10M+ cálculos tributários/mês"
+  - org: S4Sys
+    role: Desenvolvedor Python (contrato)
+    period: mar – ago (TODO ano)
+    summary: OCR, automação, LangGraph e workflows com LLM em um sistema financeiro.
+  - org: Alvaz
+    role: Senior Software Engineer
+    period: fev – jul/2023
+    summary: >-
+      Python (Django/Flask) e portal de mapeamento por drones com Angular,
+      TypeScript/Node, React, PostgreSQL, AWS, DynamoDB e SQS.
+  - org: Turing.com
+    role: Senior Full-Stack Engineer
+    period: jun – dez/2022
+    summary: TypeScript, React, Node.js e PostgreSQL para times de produto nos EUA, colaboração assíncrona.
+  - org: Arinelli Desenvolvimento de Software
+    role: Engenheiro full-stack independente
+    period: jan/2016 – presente
+    summary: >-
+      15+ clientes em e-commerce, fintech e SaaS, incluindo sistemas municipais da
+      COMLURB (2017–2019). Contractor para times nos EUA.
+
+projects:
+  - name: Arinelli Pay
+    url: https://github.com/TODO/arinelli-pay
+    summary: Portfólio público de billing/CRM, Pix e liquidação. Java/Spring, Go, NestJS, Next.js e componentes de IA.
+  - name: Pix Sandbox
+    url: https://github.com/TODO/pix-sandbox
+    summary: Emulador Pix em Go que modela comportamento PSP/SPI — idempotência, falhas, duplicatas e entrega de webhooks.
+  - name: Payment Platform Lab
+    url: https://github.com/TODO/payment-platform-lab
+    summary: Programa contínuo de engenharia de pagamentos — Payments API, ledger de partidas dobradas, Outbox, Saga, Kafka/SQS, worker Go, assistente de fraude em FastAPI, BFF NestJS e dashboard Next.js.
+  - name: Brazil Revenue Stack
+    url: https://github.com/TODO/brazil-revenue-stack
+    summary: Monólito modular em TypeScript para receita recorrente, reconciliação e operações.
+  - name: DayDreamerEnglish
+    url: https://daydreamerenglish.online
+    summary: Plataforma de ensino de inglês — Next.js na Vercel, PostgreSQL no Supabase, LiveKit na AWS.
+  - name: Cérebro Amigo
+    url: https://github.com/TODO/cerebro-amigo
+    summary: Projeto de portfólio com Next.js, .NET, FastAPI/LangGraph e pgvector.
+  - name: Fluxo
+    url: https://github.com/TODO/fluxo
+    summary: SaaS de automação de workflows (gatilho → ações) em .NET/C# e React.
+
+education:
+  - institution: TODO instituição
+    degree: Tecnólogo em Análise e Desenvolvimento de Sistemas
+  - institution: Los Angeles College of Music
+    degree: Guitar Program — Music Performance
+    period: 2012 – 2014
+
+# Fatos que os modelos costumam errar e você quer corrigir explicitamente.
+# O juiz compara as respostas contra ESTA lista com prioridade. Vá alimentando
+# conforme o dashboard (v_inaccuracies) mostrar alucinações recorrentes.
+corrections:
+  - claim: "Na Fradema o backend roda em AWS Lambda"
+    truth: "Na Fradema o backend são microsserviços .NET no Azure; o front é Next.js na Vercel."

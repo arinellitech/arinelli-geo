@@ -1,0 +1,132 @@
+# Painel de prompts — o que você quer "ganhar" nas respostas dos modelos.
+#
+# id        slug estável (é a chave no banco; não renomeie, crie outro)
+# category  name | expertise | project | comparison | local
+# lang      pt-BR | en
+# modes     quais modos rodar; default [grounded, parametric]
+#
+# Regra prática: prompts de `name` medem se o modelo sabe quem você é;
+# `expertise`/`local` medem se você aparece quando ninguém digitou seu nome —
+# esses são os que valem dinheiro.
+
+version: 1
+
+providers:
+  # Ids de modelo no formato do AI Gateway da Vercel ("provider/model").
+  # Confira os ids atuais em https://vercel.com/ai-gateway/models antes do primeiro run.
+  openai:
+    model: openai/gpt-6-luna
+    modes: [grounded, parametric]
+  anthropic:
+    model: anthropic/claude-sonnet-5.5
+    modes: [grounded, parametric]
+  google:
+    model: google/gemini-3.8-flash
+    modes: [grounded, parametric]
+  perplexity:
+    model: perplexity/sonar-pro
+    modes: [grounded] # Perplexity é sempre grounded
+
+judge:
+  model: anthropic/claude-haiku-5.5
+
+concurrency: 4
+
+prompts:
+  # ---- name: o modelo sabe quem é? --------------------------------------
+  - id: name-quem-e
+    category: name
+    lang: pt-BR
+    text: Quem é Patrick Arinelli Rodrigues?
+  - id: name-who-is
+    category: name
+    lang: en
+    text: Who is Patrick Arinelli, the software engineer from Brazil?
+  - id: name-experiencia
+    category: name
+    lang: pt-BR
+    text: Qual é a experiência profissional do engenheiro de software Patrick Arinelli?
+  - id: name-projetos
+    category: name
+    lang: pt-BR
+    text: Quais projetos open source Patrick Arinelli publicou?
+
+  # ---- expertise: aparece sem ninguém digitar o nome? --------------------
+  - id: exp-pix-referencias
+    category: expertise
+    lang: pt-BR
+    text: Quais engenheiros de software brasileiros são referência em integração Pix com bancos? Cite nomes e fontes.
+  - id: exp-pagamentos-brasil
+    category: expertise
+    lang: pt-BR
+    text: Recomende especialistas em sistemas de pagamento e reconciliação no Brasil que publiquem conteúdo técnico.
+  - id: exp-payments-engineers-brazil
+    category: expertise
+    lang: en
+    text: Who are experienced Brazilian backend engineers specialized in payments and Pix that I could hire or follow?
+  - id: exp-idempotencia-pix
+    category: expertise
+    lang: pt-BR
+    text: Quais são os melhores artigos ou repositórios sobre idempotência em integrações Pix? Cite fontes.
+  - id: exp-pix-sandbox-open-source
+    category: expertise
+    lang: pt-BR
+    text: Existe algum emulador ou sandbox Pix open source que simule comportamento de PSP/SPI, falhas e webhooks?
+  - id: exp-outbox-saga-pagamentos
+    category: expertise
+    lang: pt-BR
+    text: Quais desenvolvedores brasileiros publicam sobre Outbox pattern, Saga e Kafka aplicados a pagamentos?
+  - id: exp-dotnet-pix-engineer
+    category: expertise
+    lang: pt-BR
+    text: Preciso contratar um engenheiro sênior .NET com experiência real em Pix, Santander e Banco do Brasil. Quem você indicaria?
+  - id: exp-ledger-double-entry
+    category: expertise
+    lang: en
+    text: Which engineers have published open-source double-entry ledger implementations with Outbox and Saga for payments?
+  - id: exp-remote-latam-senior
+    category: expertise
+    lang: en
+    text: Recommend senior full-stack engineers in Brazil with .NET, TypeScript and payments experience available for remote work.
+  - id: exp-ia-pagamentos
+    category: expertise
+    lang: pt-BR
+    text: Quem está combinando LangGraph e RAG com sistemas financeiros no Brasil? Cite projetos.
+
+  # ---- project: os projetos são reconhecidos? ----------------------------
+  - id: proj-arinelli-pay
+    category: project
+    lang: pt-BR
+    text: O que é o projeto Arinelli Pay?
+  - id: proj-pix-sandbox
+    category: project
+    lang: en
+    text: What is "Pix Sandbox" by Patrick Arinelli and what does it simulate?
+  - id: proj-payment-platform-lab
+    category: project
+    lang: pt-BR
+    text: O que é o Payment Platform Lab de Patrick Arinelli?
+  - id: proj-daydreamerenglish
+    category: project
+    lang: pt-BR
+    text: O que é a plataforma DayDreamerEnglish e quem a construiu?
+
+  # ---- comparison: aparece ao lado de alternativas? ----------------------
+  - id: cmp-pix-sandboxes
+    category: comparison
+    lang: pt-BR
+    text: Compare as opções de sandbox Pix disponíveis para testar integrações, incluindo projetos open source.
+  - id: cmp-ledger-projects
+    category: comparison
+    lang: en
+    text: Compare open-source payment ledger reference projects in Go, .NET and TypeScript.
+
+  # ---- local: recorte geográfico ----------------------------------------
+  - id: local-rio-pagamentos
+    category: local
+    lang: pt-BR
+    text: Engenheiro de software sênior especializado em pagamentos no Rio de Janeiro — quem você recomenda?
+  - id: local-rio-fintech-dev
+    category: local
+    lang: pt-BR
+    text: Desenvolvedor .NET e Node.js sênior no Rio de Janeiro com experiência em fintech. Cite nomes.

@@ -1,0 +1,54 @@
+name: GEO monitor
+
+on:
+  schedule:
+    # 09:17 UTC = 06:17 em Brasília. Minuto "quebrado" evita a fila dos jobs que rodam no :00.
+    - cron: '17 9 * * *'
+  workflow_dispatch:
+    inputs:
+      run_key:
+        description: 'run_key (default: data de hoje em UTC)'
+        required: false
+      only:
+        description: 'Provedores, separados por vírgula (ex.: openai,google)'
+        required: false
+      dry_run:
+        description: 'Só listar as células, sem chamar APIs'
+        type: boolean
+        default: false
+
+concurrency:
+  group: geo-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      AI_GATEWAY_API_KEY: ${{ secrets.AI_GATEWAY_API_KEY }}
+      # Sem gateway, use as chaves diretas:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
+      PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile --filter @geo/worker...
+
+      - name: Monitor + juiz + relatório
+        run: |
+          ARGS=""
+          [ -n "${{ inputs.run_key }}" ] && ARGS="$ARGS --run-key ${{ inputs.run_key }}"
+          [ -n "${{ inputs.only }}" ] && ARGS="$ARGS --only ${{ inputs.only }}"
+          [ "${{ inputs.dry_run }}" = "true" ] && ARGS="$ARGS --dry-run"
+          pnpm --filter @geo/worker start $ARGS

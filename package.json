@@ -1,0 +1,13 @@
+{
+  "name": "arinelli-geo",
+  "private": true,
+  "packageManager": "pnpm@10.28.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "monitor": "pnpm --filter @geo/worker start",
+    "monitor:judge": "pnpm --filter @geo/worker judge",
+    "web:dev": "pnpm --filter @geo/web dev",
+    "web:build": "pnpm --filter @geo/web build",
+    "typecheck": "pnpm -r typecheck"
+  }
+}
