@@ -1,33 +1,41 @@
 import { currentRole, getFacts } from '../lib/facts';
-
-export const dynamic = 'force-static';
+import { COPY, HOME, LLMS, localize, otherLocale, type Locale } from '../lib/i18n';
 
 /**
- * Página inicial = a ficha pública. HTML semântico e literal — é o que crawlers
- * de IA e busca vão indexar. Sem JS no cliente, sem animação, sem texto escondido.
+ * A ficha pública, em pt-BR (/) ou inglês (/en). HTML semântico e literal — é o que
+ * crawlers de IA e busca vão indexar. Sem JS no cliente, sem animação, sem texto escondido.
  */
-export default function HomePage() {
-  const f = getFacts();
+export function Profile({ locale }: { locale: Locale }) {
+  const raw = getFacts();
+  const f = localize(raw, locale);
+  const c = COPY[locale];
+  const other = otherLocale(locale);
   const role = currentRole(f);
   const profiles = Object.entries(f.profiles).filter(([, u]) => !u.includes('TODO'));
 
   return (
     <main>
+      <p className="lang">
+        <a href={HOME[other]} hrefLang={other} lang={other} rel="alternate">
+          {COPY[other].languageName}
+        </a>
+      </p>
+
       <header>
         <h1>{f.person.name}</h1>
         <p className="lede">{f.person.headline}</p>
-        {f.person.headline_en && (
+        {locale === 'pt-BR' && raw.person.headline_en && (
           <p className="lede muted" lang="en">
-            {f.person.headline_en}
+            {raw.person.headline_en}
           </p>
         )}
         <p className="meta">
           {f.person.location.city}, {f.person.location.country}
-          {role ? <> · {role.role} na {role.org}</> : null}
-          {f.person.since ? <> · engenharia de software desde {f.person.since.slice(0, 4)}</> : null}
+          {role ? <> · {c.roleAt(role.role, role.org)}</> : null}
+          {f.person.since ? <> · {c.since(f.person.since.slice(0, 4))}</> : null}
         </p>
         {profiles.length > 0 && (
-          <nav aria-label="Perfis">
+          <nav aria-label={c.profiles}>
             <ul className="inline">
               {profiles.map(([name, url]) => (
                 <li key={name}>
@@ -41,8 +49,8 @@ export default function HomePage() {
         )}
       </header>
 
-      <section id="especialidades">
-        <h2>Especialidades</h2>
+      <section id={c.expertise.id}>
+        <h2>{c.expertise.title}</h2>
         <ul>
           {f.expertise.domains.map((d) => (
             <li key={d}>{d}</li>
@@ -51,8 +59,8 @@ export default function HomePage() {
         <p className="muted">Stack: {f.expertise.stack.join(' · ')}</p>
       </section>
 
-      <section id="projetos">
-        <h2>Projetos</h2>
+      <section id={c.projects.id}>
+        <h2>{c.projects.title}</h2>
         <dl>
           {f.projects.map((p) => (
             <div key={p.name}>
@@ -63,8 +71,8 @@ export default function HomePage() {
         </dl>
       </section>
 
-      <section id="experiencia">
-        <h2>Experiência</h2>
+      <section id={c.experience.id}>
+        <h2>{c.experience.title}</h2>
         <dl>
           {f.experience.map((e) => (
             <div key={`${e.org}-${e.period}`}>
@@ -73,15 +81,15 @@ export default function HomePage() {
               </dt>
               <dd>
                 {e.summary}
-                {e.scale ? <> Escala: {e.scale}.</> : null}
+                {e.scale ? <> {c.scale}: {e.scale}.</> : null}
               </dd>
             </div>
           ))}
         </dl>
       </section>
 
-      <section id="formacao">
-        <h2>Formação e idiomas</h2>
+      <section id={c.education.id}>
+        <h2>{c.education.title}</h2>
         <ul>
           {f.education.map((e) => (
             <li key={e.degree}>
@@ -90,12 +98,14 @@ export default function HomePage() {
             </li>
           ))}
         </ul>
-        <p className="muted">Idiomas: {f.person.languages.map((l) => `${l.name} (${l.level})`).join(', ')}</p>
+        <p className="muted">
+          {c.languages}: {f.person.languages.map((l) => `${l.name} (${l.level})`).join(', ')}
+        </p>
       </section>
 
       <footer>
         <p className="muted">
-          Fatos desta página também estão em <a href="/llms.txt">/llms.txt</a>.
+          {c.alsoIn} <a href={LLMS[locale]}>{LLMS[locale]}</a>.
         </p>
       </footer>
     </main>

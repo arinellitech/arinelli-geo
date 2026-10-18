@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { parse } from 'yaml';
 
+/** Campos `*_en` são a versão em inglês do campo irmão, usada em /en. Ver `localize` em i18n.ts. */
 export type Facts = {
   person: {
     name: string;
@@ -10,15 +11,25 @@ export type Facts = {
     headline: string;
     headline_en?: string;
     location: { city: string; region?: string; country: string };
-    languages: { name: string; level: string }[];
+    languages: { name: string; name_en?: string; level: string; level_en?: string }[];
     since?: string;
   };
   site: { url: string; own_domains: string[] };
   profiles: Record<string, string>;
-  expertise: { domains: string[]; stack: string[] };
-  experience: { org: string; role: string; period: string; summary: string; scale?: string }[];
-  projects: { name: string; url?: string; summary: string }[];
-  education: { institution: string; degree: string; period?: string }[];
+  expertise: { domains: string[]; domains_en?: string[]; stack: string[] };
+  experience: {
+    org: string;
+    role: string;
+    role_en?: string;
+    period: string;
+    period_en?: string;
+    summary: string;
+    summary_en?: string;
+    scale?: string;
+    scale_en?: string;
+  }[];
+  projects: { name: string; url?: string; summary: string; summary_en?: string }[];
+  education: { institution: string; degree: string; degree_en?: string; period?: string }[];
   corrections?: { claim: string; truth: string }[];
 };
 

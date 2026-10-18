@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getSql, loadDashboard, type CellRow, type TrendRow } from '../../lib/db';
+import { getSql, loadDashboard, type CellRow, type TrendRow } from '../../../lib/db';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Dashboard', robots: { index: false, follow: false } };

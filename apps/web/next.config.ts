@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: { '/**': ['../../facts.yaml'] },
   serverExternalPackages: ['postgres'],
   poweredByHeader: false,
+  // Dois root layouts, (pt) e (en): o 404 de URL sem rota vem de app/global-not-found.tsx.
+  experimental: { globalNotFound: true },
 };
 
 export default nextConfig;
