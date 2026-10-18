@@ -76,6 +76,9 @@ tokens; o que pesa são as buscas nativas (cobradas por chamada pelos provedores
 ### 6. Deploy do site (Vercel)
 
 Root directory `apps/web`, framework Next.js. Variáveis: `DATABASE_URL`, `DASHBOARD_USER`, `DASHBOARD_PASSWORD`.
+O deploy sai do workflow `.github/workflows/deploy.yml` (CLI da Vercel), não da integração Git nativa: o login da
+Vercel está ligado a outra conta GitHub e não enxerga este repo. Push na `main` publica em produção; PR ganha
+preview com o link comentado. Secret necessário: `VERCEL_TOKEN` (vercel.com/account/tokens, escopo no time).
 O `next.config.ts` já inclui `../../facts.yaml` no trace do build. Depois do deploy, confira:
 
 - `/` com `<script type="application/ld+json">` de `Person` (valide em <https://validator.schema.org>)
