@@ -83,7 +83,9 @@ Root directory `apps/web`, framework Next.js. Variáveis: `DATABASE_URL`, `DASHB
 O deploy sai do workflow `.github/workflows/deploy.yml` (CLI da Vercel), não da integração Git nativa: o login da
 Vercel está ligado a outra conta GitHub e não enxerga este repo. Push na `main` publica em produção; PR ganha
 preview com o link comentado. Secret necessário: `VERCEL_TOKEN` (vercel.com/account/tokens, escopo no time).
-O `next.config.ts` já inclui `../../facts.yaml` no trace do build. Depois do deploy, confira:
+O `next.config.ts` já inclui `../../facts.yaml` no trace do build. As funções rodam em `sin1` (`apps/web/vercel.json`),
+ao lado do Supabase em ap-southeast-1: só o `/dashboard` usa o banco, e com a função longe dele cada carga levava
+3–7 s. Se o banco mudar de região, mude essa também. Depois do deploy, confira:
 
 - `/` com `<script type="application/ld+json">` de `Person` (valide em <https://validator.schema.org>)
 - `/llms.txt`, `/robots.txt`, `/sitemap.xml`
