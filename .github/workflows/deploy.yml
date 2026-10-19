@@ -1,0 +1,91 @@
+name: Deploy site (Vercel)
+
+# O repo fica na conta arinellitech, mas o login da Vercel está ligado ao GitHub arinelliquebec,
+# então a integração nativa não enxerga este repo. O deploy sai daqui, pela CLI da Vercel:
+# push na main = produção; PR = preview com o link comentado no PR.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/web/**'
+      - 'facts.yaml'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - '.github/workflows/deploy.yml'
+  pull_request:
+    paths:
+      - 'apps/web/**'
+      - 'facts.yaml'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Ids do time e do projeto na Vercel (não são segredo). O token vem do secret VERCEL_TOKEN.
+  VERCEL_ORG_ID: team_t7ZHtwywJ1GqjR5ZlIPXsqAv
+  VERCEL_PROJECT_ID: prj_FUxVBD6mDFNR2AS8ZFSPolOOFxDs
+  VERCEL_CLI: vercel@62.2.0
+
+jobs:
+  deploy:
+    # PR de fork não recebe secrets; não há como fazer deploy dele.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Ambiente
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "::error::Secret VERCEL_TOKEN não definido (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+          if [ "$GITHUB_REF" = "refs/heads/main" ] && [ "$GITHUB_EVENT_NAME" != "pull_request" ]; then
+            echo "TARGET=production" >> "$GITHUB_ENV"
+            echo "PROD_FLAG=--prod" >> "$GITHUB_ENV"
+          else
+            echo "TARGET=preview" >> "$GITHUB_ENV"
+            echo "PROD_FLAG=" >> "$GITHUB_ENV"
+          fi
+
+      - name: Puxar configuração do projeto
+        run: npx --yes "$VERCEL_CLI" pull --yes --environment="$TARGET" --token="$VERCEL_TOKEN"
+
+      - name: Build
+        run: npx --yes "$VERCEL_CLI" build $PROD_FLAG --token="$VERCEL_TOKEN"
+
+      - name: Deploy
+        id: deploy
+        run: |
+          url=$(npx --yes "$VERCEL_CLI" deploy --prebuilt $PROD_FLAG --token="$VERCEL_TOKEN")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Deploy ($TARGET): $url" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Link do preview no PR
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          body="Preview: ${{ steps.deploy.outputs.url }} (commit ${GITHUB_SHA::7})"
+          gh pr comment ${{ github.event.pull_request.number }} --repo "$GITHUB_REPOSITORY" --edit-last --body "$body" \
+            || gh pr comment ${{ github.event.pull_request.number }} --repo "$GITHUB_REPOSITORY" --body "$body"
