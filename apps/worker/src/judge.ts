@@ -5,6 +5,8 @@ import { factsAsText, mentionTargets, type Facts } from './config.js';
 import { insertJudgment, responsesNeedingJudgment, type PendingJudgment, type Sql } from './db.js';
 import { resolveModel } from './providers.js';
 
+// As listas não têm .max(): o modelo não respeita maxItems, e um limite aqui descarta julgamentos
+// corretos (ex.: resposta que recomenda 12 empresas).
 export const judgmentSchema = z.object({
   mention_kind: z
     .enum(['person', 'project', 'none'])
@@ -23,11 +25,9 @@ export const judgmentSchema = z.object({
     .describe("Afirmações sobre a pessoa-alvo comparadas aos FATOS. 'n/a' se não mencionada."),
   inaccuracies: z
     .array(z.object({ claim: z.string(), correction: z.string() }))
-    .max(10)
     .describe('Cada afirmação incorreta sobre a pessoa-alvo e a correção conforme os FATOS. Vazio se não houver.'),
   competitors: z
     .array(z.string())
-    .max(10)
     .describe('Outras pessoas, empresas ou projetos recomendados na resposta (nomes exatos). Vazio se não houver.'),
   summary: z.string().max(300).describe('Uma frase, em português, resumindo como a pessoa-alvo aparece (ou não) na resposta.'),
 });
