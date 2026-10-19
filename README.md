@@ -38,7 +38,8 @@ Aplique as migrations de `supabase/migrations/` em ordem (SQL editor ou `supabas
 role `geo_worker`, que só enxerga o schema `geo`; defina a senha dele fora do repo
 (`alter role geo_worker with login password '...'`). O banco pode ser compartilhado com outro app, então o
 `DATABASE_URL` usa esse role, nunca o `postgres`: Transaction pooler (porta 6543) com usuário
-`geo_worker.<project_ref>`.
+`geo_worker.<project_ref>`. A terceira cria o `geo_reader`, só de leitura, para o dashboard: só lê as views e
+`geo.runs`, e toda transação dele é read-only. Mesma coisa: `alter role geo_reader with login password '...'`.
 
 ### 2. Fatos e prompts
 
@@ -79,7 +80,8 @@ com Sonnet é o provedor mais caro. Semanal dá uns US$ 10–15/mês; diário pa
 
 ### 6. Deploy do site (Vercel)
 
-Root directory `apps/web`, framework Next.js. Variáveis: `DATABASE_URL`, `DASHBOARD_USER`, `DASHBOARD_PASSWORD`.
+Root directory `apps/web`, framework Next.js. Variáveis: `DATABASE_URL` (com o `geo_reader`, não o `geo_worker`),
+`DASHBOARD_USER`, `DASHBOARD_PASSWORD`.
 O deploy sai do workflow `.github/workflows/deploy.yml` (CLI da Vercel), não da integração Git nativa: o login da
 Vercel está ligado a outra conta GitHub e não enxerga este repo. Push na `main` publica em produção; PR ganha
 preview com o link comentado. Secret necessário: `VERCEL_TOKEN` (vercel.com/account/tokens, escopo no time).
