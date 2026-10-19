@@ -16,6 +16,12 @@ export function countryName(code: string, locale: Locale): string {
   return names[code]?.[locale] ?? code;
 }
 
+/** "no Rio de Janeiro", "em São Paulo": algumas cidades pedem artigo em português. */
+function emCidade(city: string): string {
+  const comArtigo: Record<string, string> = { 'Rio de Janeiro': 'no' };
+  return `${comArtigo[city] ?? 'em'} ${city}`;
+}
+
 /** Rótulos fixos da página e do llms.txt. O conteúdo em si vem do facts.yaml. */
 export const COPY = {
   'pt-BR': {
@@ -29,8 +35,8 @@ export const COPY = {
     scale: 'Escala',
     roleAt: (role: string, org: string) => `${role} na ${org}`,
     since: (year: string) => `engenharia de software desde ${year}`,
-    intro: (short: string, name: string, place: string, year?: string, role?: string) =>
-      `${short} (nome completo: ${name}) é engenheiro de software em ${place}` +
+    intro: (short: string, name: string, city: string, country: string, year?: string, role?: string) =>
+      `${short} (nome completo: ${name}) é engenheiro de software ${emCidade(city)}, ${country}` +
       (year ? `, atuando desde ${year}` : '') +
       (role ? `. Atualmente ${role}.` : '.'),
     alsoIn: 'Fatos desta página também estão em',
@@ -47,8 +53,8 @@ export const COPY = {
     scale: 'Scale',
     roleAt: (role: string, org: string) => `${role} at ${org}`,
     since: (year: string) => `software engineering since ${year}`,
-    intro: (short: string, name: string, place: string, year?: string, role?: string) =>
-      `${short} (full name: ${name}) is a software engineer based in ${place}` +
+    intro: (short: string, name: string, city: string, country: string, year?: string, role?: string) =>
+      `${short} (full name: ${name}) is a software engineer based in ${city}, ${country}` +
       (year ? `, working since ${year}` : '') +
       (role ? `. Currently ${role}.` : '.'),
     alsoIn: 'The facts on this page are also available at',
