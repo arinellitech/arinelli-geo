@@ -24,7 +24,7 @@ providers:
     model: google/gemini-3.8-flash
     modes: [grounded, parametric]
   perplexity:
-    model: perplexity/sonar-pro
+    model: perplexity/sonar
     modes: [grounded] # Perplexity é sempre grounded
 
 judge:
