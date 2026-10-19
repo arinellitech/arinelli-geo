@@ -138,6 +138,7 @@ export function factsAsText(f: Facts): string {
   if (f.person.since) lines.push(`Carreira desde: ${f.person.since}`);
   lines.push(`Idiomas: ${f.person.languages.map((l) => `${l.name} (${l.level})`).join(', ')}`);
   lines.push(`Site: ${f.site.url}`);
+  if (f.site.own_domains.length) lines.push(`Sites próprios (citá-los não é erro): ${f.site.own_domains.join(', ')}`);
   for (const [k, v] of Object.entries(f.profiles)) lines.push(`Perfil ${k}: ${v}`);
   lines.push(`Domínios de atuação: ${f.expertise.domains.join('; ')}`);
   lines.push(`Stack: ${f.expertise.stack.join(', ')}`);
