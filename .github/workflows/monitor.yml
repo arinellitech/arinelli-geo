@@ -2,8 +2,9 @@ name: GEO monitor
 
 on:
   schedule:
-    # 09:17 UTC = 06:17 em Brasília. Minuto "quebrado" evita a fila dos jobs que rodam no :00.
-    - cron: '17 9 * * *'
+    # Segunda, 09:17 UTC = 06:17 em Brasília. Minuto "quebrado" evita a fila dos jobs que rodam no :00.
+    # Semanal: um run completo custa uns US$ 3 (ver README) e as respostas mudam devagar.
+    - cron: '17 9 * * 1'
   workflow_dispatch:
     inputs:
       run_key:
