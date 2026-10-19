@@ -33,8 +33,13 @@ site:
   # Troque pelo domínio próprio quando tiver um (e adicione-o em own_domains).
   url: https://arinelli-geo.vercel.app
   # Domínios que você controla. Citações nesses domínios contam como "próprias" no dashboard.
+  # A comparação é exata: liste também a variante com www quando o site responder nela.
   own_domains:
     - arinelli-geo.vercel.app
+    - arinelli.com
+    - www.arinelli.com
+    - cerebroamigo.com.br
+    - www.cerebroamigo.com.br
     - daydreamerenglish.online
 
 profiles:
