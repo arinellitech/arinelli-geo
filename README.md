@@ -10,7 +10,7 @@ prompts/panel.yaml    painel de prompts, modelos por provedor, modelo do juiz
 supabase/migrations/  schema (geo.*) com invariantes no banco
 apps/worker           coleta (prompt × provedor × modo) + juiz + relatório   [Node/TS, AI SDK]
 apps/web              site público (Person JSON-LD, /llms.txt, robots) + /dashboard  [Next.js]
-.github/workflows     cron diário que roda o worker
+.github/workflows     cron semanal que roda o worker
 ```
 
 ## Como funciona
@@ -69,12 +69,13 @@ apague os julgamentos (`delete from geo.judgments`) e rode `pnpm monitor:judge`.
 
 ### 5. Agendar (GitHub Actions)
 
-Secrets do repositório: `DATABASE_URL` e `AI_GATEWAY_API_KEY` (ou as chaves diretas). O workflow roda todo dia
-às 06:17 (Brasília) e pode ser disparado à mão com `run_key`, `only` e `dry_run`.
+Secrets do repositório: `DATABASE_URL` e `AI_GATEWAY_API_KEY` (ou as chaves diretas). O workflow roda toda
+segunda às 06:17 (Brasília) e pode ser disparado à mão com `run_key`, `only` e `dry_run`.
 
-Custo de referência com o painel inicial (22 prompts → 154 chamadas + 154 julgamentos): centavos de dólar em
-tokens; o que pesa são as buscas nativas (cobradas por chamada pelos provedores). Se quiser reduzir, rode
-3× por semana (`cron: '17 9 * * 1,3,5'`) ou desative `parametric` em alguns provedores — ele muda devagar.
+Custo de referência com o painel inicial (22 prompts → 154 chamadas + 154 julgamentos): uns US$ 2,50–3,50 por
+run completo (preços do AI Gateway em out/2026). O que pesa é o modo `grounded`: as buscas nativas são cobradas
+por chamada e os resultados entram como tokens de entrada (no run da OpenAI, ~27 mil por resposta). A Anthropic
+com Sonnet é o provedor mais caro. Semanal dá uns US$ 10–15/mês; diário passaria de US$ 75/mês.
 
 ### 6. Deploy do site (Vercel)
 
