@@ -1,5 +1,5 @@
 import { currentRole, getFacts } from '../lib/facts';
-import { COPY, HOME, LLMS, localize, otherLocale, type Locale } from '../lib/i18n';
+import { COPY, countryName, HOME, LLMS, localize, otherLocale, type Locale } from '../lib/i18n';
 
 /**
  * A ficha pública, em pt-BR (/) ou inglês (/en). HTML semântico e literal — é o que
@@ -30,7 +30,7 @@ export function Profile({ locale }: { locale: Locale }) {
           </p>
         )}
         <p className="meta">
-          {f.person.location.city}, {f.person.location.country}
+          {f.person.location.city}, {countryName(f.person.location.country, locale)}
           {role ? <> · {c.roleAt(role.role, role.org)}</> : null}
           {f.person.since ? <> · {c.since(f.person.since.slice(0, 4))}</> : null}
         </p>

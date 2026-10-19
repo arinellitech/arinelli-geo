@@ -1,5 +1,5 @@
 import { currentRole, getFacts, siteUrl } from './facts';
-import { COPY, HOME, LLMS, localize, otherLocale, type Locale } from './i18n';
+import { COPY, countryName, HOME, LLMS, localize, otherLocale, type Locale } from './i18n';
 
 /**
  * llms.txt — resumo em Markdown para crawlers de modelos (convenção llmstxt.org).
@@ -25,7 +25,8 @@ export function llmsTxt(locale: Locale): string {
     c.intro(
       f.person.short_name,
       f.person.name,
-      `${f.person.location.city}, ${f.person.location.country}`,
+      f.person.location.city,
+      countryName(f.person.location.country, locale),
       f.person.since?.slice(0, 4),
       role ? c.roleAt(role.role, role.org) : undefined,
     ),
